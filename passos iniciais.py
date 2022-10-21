@@ -1,73 +1,110 @@
 import pygame
+from mecanica_celulas import obj
 from pygame.locals import *
 from sys import exit
 
-def desenhaBloco(screen, colorblock, colorlineup, colorlinedown, inicio, blocklarg, blockalt):
-    x0 = inicio[0]
-    y0 = inicio[1]
-    x_y0 = [x0, y0]
-    list = []
-    list.append(x_y0)
+def gerarMatriz(num):
+    matriz = []
+    aux = []
+    for i in range(0, num):
+        for j in range(0, num):
+            objaux = obj([i, j], 0, 0, 0)
+            aux.append(objaux)
+        matriz.append(aux)
+        aux = []
+    return matriz
 
-    pygame.draw.rect(screen, colorlineup, (list[0][0] + 1, list[0][1] + 1, blocklarg, blockalt))
-    pygame.draw.rect(screen, colorlinedown, (list[0][0] + 4, list[0][1] + 4, blocklarg-3, blockalt-3))
-    pygame.draw.rect(screen, colorblock, (list[0][0] + 4, list[0][1] + 4, blocklarg-6, blockalt-6))
-
-def desenharTabuleiro8(screen):
-    #tabuleiro 640x480
+def printMatriz(matriz, screen, larg, alt, num):
+    Lista = matriz
     x_inicial = 0
     y_inicial = 100
-    newLarg = 80
-    newAlt = 60
+    newLarg = (larg) / num
+    newAlt = (alt - y_inicial) / num
+    for lista in Lista:
+        for cell in lista:
+            printarBlock(screen, cell.rect, newLarg, newAlt, cell.cond)
 
-    for i in range(0, 8):
-        for j in range(0,8):
-            desenhaBloco(screen, cinza, branco, cinzaEscuro, (x_inicial+newLarg*j, y_inicial + newAlt * i), newLarg, newAlt)
+def printarBlock(screen, coords, larg, alt, type):
+    branco = (255, 255, 255)
+    cinza = (153, 153, 153)
+    cinzaEscuro = (102, 102, 102)
+    preto = (0, 0, 0)
+    vermelho = (255, 0, 0)
+    if type == 0:
+        pygame.draw.rect(screen, branco, (coords[0], coords[1], larg, alt))
+        pygame.draw.rect(screen, cinzaEscuro, (coords[0] + 4, coords[1] + 4, larg - 3, alt - 3))
+        pygame.draw.rect(screen, cinza, (coords[0] + 4, coords[1] + 4, larg - 6, alt - 6))
+    elif type == 1:
+        pygame.draw.rect(screen, branco, (coords[0], coords[1], larg, alt))
+        pygame.draw.rect(screen, cinzaEscuro, (coords[0] + 4, coords[1] + 4, larg - 3, alt - 3))
+        pygame.draw.rect(screen, vermelho, (coords[0] + 4, coords[1] + 4, larg - 6, alt - 6))
 
-def desenharTabuleiro16(screen):
-    #tabuleiro 640x480
+
+def Tabuleiro8(screen, larg, alt):
+    num = 8
+    matriz = gerarMatriz(num)
     x_inicial = 0
     y_inicial = 100
-    newLarg = 40
-    newAlt = 30
-    for i in range(0, 16):
-        for j in range(0,16):
-            desenhaBloco(screen, cinza, branco, cinzaEscuro, (x_inicial+newLarg*j, y_inicial + newAlt * i), newLarg, newAlt)
+    newLarg = (larg)/num
+    newAlt = (alt-y_inicial)/num
+    for i in range(0, num):
+        for j in range(0, num):
+            matriz[i][j].rect = [x_inicial + newLarg * j, y_inicial + newAlt * i]
+
+    for lista in matriz:
+        for cell in lista:
+            printarBlock(screen, cell.rect, newLarg, newAlt, cell.cond)
+
+def gerarTabuleiro(matriz, larg, alt, num):
+    x_inicial = 0
+    y_inicial = 100
+    newLarg = (larg) / num
+    newAlt = (alt - y_inicial) / num
+    for i in range(0, num):
+        for j in range(0, num):
+            matriz[i][j].rect = [x_inicial + newLarg * j, y_inicial + newAlt * i]
+
+def Tabuleiro(screen, larg, alt, num):
+    matriz = gerarMatriz(num)
+    x_inicial = 0
+    y_inicial = 100
+    newLarg = (larg)/num
+    newAlt = (alt-y_inicial)/num
+    for i in range(0, num):
+         for j in range(0, num):
+            matriz[i][j].rect = [x_inicial + newLarg * j, y_inicial + newAlt * i]
+
+    matriz[0][0].cond = 1
+    for lista in matriz:
+        for cell in lista:
+            printarBlock(screen, cell.rect, newLarg, newAlt, cell.cond)
+
 
 pygame.init()
 
 largura = 640
 altura = 580
-cinza = (153, 153, 153)
-cinzaEscuro = (102, 102, 102)
-branco = (255, 255, 255)
-preto = (0, 0, 0)
-vermelho = (255, 0, 0)
 
 tela = pygame.display.set_mode((largura, altura))
 pygame.display.set_caption('Teste pygame')
 
+matriz = gerarMatriz(8)
+gerarTabuleiro(matriz, largura, altura, 8)
 
 while True:
+
+    printMatriz(matriz, tela, largura, altura, 8)
+
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print(coordrato)
 
-#    pygame.draw.line(tela, branco, (largura / 2, altura / 2), ((largura / 2), (altura / 2) + 39))
-#    pygame.draw.line(tela, branco, ((largura / 2) + 1, altura / 2), ((largura / 2) + 1, (altura / 2) + 39))
-#    pygame.draw.line(tela, branco, ((largura / 2) + 2, altura / 2), ((largura / 2) + 2, (altura / 2) + 39))
-#    pygame.draw.line(tela, branco, (largura / 2, altura / 2), ((largura / 2) + 39, (altura / 2)))
-#    pygame.draw.line(tela, branco, (largura / 2, (altura / 2) + 1), ((largura / 2) + 39, (altura / 2) + 1))
-#    pygame.draw.line(tela, branco, (largura / 2, (altura / 2) + 2), ((largura / 2) + 39, (altura / 2) + 2))
 
-#    pygame.draw.line(tela, cinzaEscuro, (largura / 2, (altura / 2) + 39), ((largura / 2) + 39, (altura / 2) + 39))
-#    pygame.draw.line(tela, cinzaEscuro, (largura / 2, (altura / 2) + 38), ((largura / 2) + 39, (altura / 2) + 38))
-#    pygame.draw.line(tela, cinzaEscuro, (largura / 2, (altura / 2) + 37), ((largura / 2) + 39, (altura / 2) + 37))
-#    pygame.draw.line(tela, cinzaEscuro, ((largura / 2) + 39, (altura / 2)), ((largura / 2) + 39, (altura / 2) + 39))
-#    pygame.draw.line(tela, cinzaEscuro, ((largura / 2) + 38, (altura / 2)), ((largura / 2) + 38, (altura / 2) + 39))
-#    pygame.draw.line(tela, cinzaEscuro, ((largura / 2) + 37, (altura / 2)), ((largura / 2) + 37, (altura / 2) + 39))
 
-    desenharTabuleiro16(tela)
+    coordrato = pygame.mouse.get_pos()
+    rato = pygame.draw.rect(tela, (0, 0, 0), (coordrato[0], coordrato[1], 0, 0))
 
     pygame.display.update()
