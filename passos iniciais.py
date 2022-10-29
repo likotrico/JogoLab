@@ -25,6 +25,10 @@ def printMatriz(matriz, screen, larg, alt, num):
             printarBlock(screen, cell.rect, newLarg, newAlt, cell.cond)
 
 def printarBlock(screen, coords, larg, alt, type):
+    print('coords')
+    print(coords)
+    print(coords[0])
+    print(coords[1])
     if type == 0:
         pygame.draw.rect(screen, branco, (coords[0], coords[1], larg, alt))
         pygame.draw.rect(screen, cinzaEscuro, (coords[0] + 4, coords[1] + 4, larg - 3, alt - 3))
@@ -65,7 +69,7 @@ def printarNumero(matriz, screen, newlarg, newalt, texto, coords, dimensoes):
                 if j.rect == coords:
                     screen.blit(texto, (((j.rect[0])+(newlarg)/2)-7, ((j.rect[1])+(newalt)/4)-7))
 
-def rastreamento(matriz, newLarg, newAlt, largura, altura, x_inicial, y_inicial):
+def rastreamento(matriz):
     print('entrou rast')
     print(len(matriz)-1)
     for i in range(0, len(matriz)):
@@ -74,37 +78,132 @@ def rastreamento(matriz, newLarg, newAlt, largura, altura, x_inicial, y_inicial)
             if i - 1 >= 0 and j - 1 >=0:
                 if matriz[i-1][j-1].bomb == 1:
                     count += 1
-                    print('entrou')
             if j - 1 >= 0:
                 if matriz[i][j-1].bomb == 1:
                     count += 1
-                    print('entrou')
             if i + 1 <= len(matriz) - 1 and j - 1 >= 0:
                 if matriz[i+1][j-1].bomb == 1:
                     count += 1
-                    print('entrou')
             if i - 1 >= 0:
                 if matriz[i - 1][j].bomb == 1:
                     count += 1
-                    print('entrou')
             if i + 1 <= len(matriz)-1:
                 if matriz[i+1][j].bomb == 1:
                     count += 1
-                    print('entrou')
             if i - 1 >= 0 and j + 1 <= len(matriz)-1:
                 if matriz[i-1][j+1].bomb == 1:
                     count += 1
-                    print('entrou')
             if j+1<=len(matriz)-1:
                 if matriz[i][j+1].bomb == 1:
                     count += 1
-                    print('entrou')
             if i+1<=len(matriz)-1 and j+1<=len(matriz)-1:
                 if matriz[i+1][j+1].bomb == 1:
                     count += 1
-                    print('entrou')
-                print(count)
-                matriz[i][j].rast = count
+            print(count)
+            matriz[i][j].rast = count
+
+def revelarAdjacentes1(coords, matriz):
+    #receber as coordenadas em variaveis separadas tipo X e Y
+    #Verificar as adjacentes se o rastreamento é 0 e relevar elas, e chamar a função recursivamente
+    x_coord = int(coords[0])
+    y_coord = int(coords[1])
+    print('entrou1')
+    for X in range(0, len(matriz)):
+        for Y in range(0, len(matriz)):
+            print('entrou2')
+            if matriz[X][Y].rect == [x_coord, y_coord]:
+                if X - 1 >= 0 and Y - 1 >= 0:
+                    if matriz[X - 1][Y - 1].rast == 0:
+                        matriz[X - 1][Y - 1].cond = 1
+                        revelarAdjacentes(matriz[X - 1][Y - 1].rect, matriz)
+                if Y - 1 >= 0:
+                    if matriz[X][Y - 1].rast == 0:
+                        matriz[X][Y-1].cond = 1
+                        revelarAdjacentes(matriz[X][Y-1].rect, matriz)
+                if X + 1 <= len(matriz) - 1 and Y - 1 >= 0:
+                    if matriz[X+1][Y-1].rast == 0:
+                        matriz[X+1][Y-1].cond = 1
+                        revelarAdjacentes(matriz[X+1][Y-1].rect, matriz)
+                if X - 1 >= 0:
+                    if matriz[X-1][Y].rast == 0:
+                        matriz[X-1][Y].cond = 1
+                        revelarAdjacentes(matriz[X-1][Y].rect, matriz)
+                if X + 1 <= len(matriz) - 1:
+                    if matriz[X+1][Y].rast == 0:
+                        matriz[X+1][Y].cond = 1
+                        revelarAdjacentes(matriz[X+1][Y].rect, matriz)
+                if X - 1 >= 0 and Y + 1 <= len(matriz) - 1:
+                    if matriz[X-1][Y+1].rast == 0:
+                        matriz[X-1][Y+1].cond = 1
+                        revelarAdjacentes(matriz[X-1][Y+1].rect, matriz)
+                if Y + 1 <= len(matriz) - 1:
+                    if matriz[X][Y+1].rast == 0:
+                        matriz[X][Y+1].cond = 1
+                        revelarAdjacentes(matriz[X][Y+1].rect, matriz)
+                if X + 1 <= len(matriz) - 1 and Y + 1 <= len(matriz) - 1:
+                    if matriz[X+1][Y+1].rast == 0:
+                        matriz[X+1][Y+1].cond = 1
+                        revelarAdjacentes(matriz[X+1][Y+1].rect, matriz)
+
+def verificarPertence(lista, valor):
+    for i in lista:
+        if i == valor:
+            return True
+    return False
+
+def revelarAdjacentes(coords, matriz):
+    verificacoes = []
+    verificacoes.append(coords)
+    verificados = []
+    print(verificacoes)
+    while len(verificacoes) != 0:
+        x_coord = verificacoes[0][0]
+        y_coord = verificacoes[0][1]
+        print(x_coord)
+        print(y_coord)
+        for X in range(0, len(matriz)):
+            for Y in range(0, len(matriz)):
+                print('entrou2')
+                if matriz[X][Y].rect == [x_coord, y_coord]:
+                    print('achou')
+                    """if X - 1 >= 0 and Y - 1 >= 0:
+                        if matriz[X - 1][Y - 1].rast == 0 and matriz[X - 1][Y - 1].bomb == 0 and (matriz[X-1][Y-1].rect in verificados) == False:
+                            matriz[X - 1][Y - 1].cond = 1
+                            verificacoes.append(matriz[X-1][Y-1].rect)"""
+                    if Y - 1 >= 0:
+                        if matriz[X][Y - 1].rast == 0 and matriz[X][Y - 1].bomb == 0 and (matriz[X][Y - 1].rect in verificados) == False:
+                            matriz[X][Y - 1].cond = 1
+                            verificacoes.append(matriz[X][Y - 1].rect)
+                    """if X + 1 <= len(matriz) - 1 and Y - 1 >= 0:
+                        if matriz[X + 1][Y - 1].rast == 0 and matriz[X + 1][Y - 1].bomb == 0 and (matriz[X + 1][Y - 1].rect in verificados) == False:
+                            matriz[X + 1][Y - 1].cond = 1
+                            verificacoes.append(matriz[X + 1][Y - 1].rect)"""
+                    if X - 1 >= 0:
+                        if matriz[X - 1][Y].rast == 0 and matriz[X - 1][Y].bomb == 0 and (matriz[X - 1][Y].rect in verificados) == False:
+                            matriz[X - 1][Y].cond = 1
+                            verificacoes.append(matriz[X - 1][Y].rect)
+                    if X + 1 <= len(matriz) - 1:
+                        if matriz[X + 1][Y].rast == 0 and matriz[X + 1][Y].bomb == 0 and (matriz[X + 1][Y].rect in verificados) == False:
+                            matriz[X + 1][Y].cond = 1
+                            verificacoes.append(matriz[X + 1][Y].rect)
+                    """if X - 1 >= 0 and Y + 1 <= len(matriz) - 1:
+                        if matriz[X - 1][Y + 1].rast == 0 and matriz[X - 1][Y + 1].bomb == 0 and (matriz[X - 1][Y + 1].rect in verificados) == False:
+                            matriz[X - 1][Y + 1].cond = 1
+                            verificacoes.append(matriz[X - 1][Y + 1].rect)"""
+                    if Y + 1 <= len(matriz) - 1:
+                        if matriz[X][Y + 1].rast == 0 and matriz[X][Y + 1].bomb == 0 and (matriz[X][Y + 1].rect in verificados) == False:
+                            matriz[X][Y + 1].cond = 1
+                            verificacoes.append(matriz[X][Y + 1].rect)
+                    """if X + 1 <= len(matriz) - 1 and Y + 1 <= len(matriz) - 1:
+                        if matriz[X + 1][Y + 1].rast == 0 and matriz[X + 1][Y + 1].bomb == 0 and (matriz[X + 1][Y + 1].rect in verificados) == False:
+                            matriz[X + 1][Y + 1].cond = 1
+                            verificacoes.append(matriz[X + 1][Y + 1].rect)"""
+        print(verificacoes)
+        if len(verificacoes) > 0:
+            verificados.append([x_coord, y_coord])
+            verificacoes.remove([x_coord,y_coord])
+
+
 
 
 pygame.init()
@@ -127,6 +226,7 @@ pygame.display.set_caption('Teste pygame') # Nome da Janela do jogo
 
 dimensoes = 8 # Dimensão que pode ser alterada
 qtd_bombas = dimensoes + 1
+bombas_restante = qtd_bombas
 #Organizando fonte
 tamanho_fonte = 0
 if dimensoes == 8:
@@ -157,8 +257,11 @@ for i in matriz:
 
 
 qtd_reveladas = 0
+vitoria = -1
+um_valorai = []
+gameloop = True
 
-while True:
+while gameloop:
 
     printMatriz(matriz, tela, largura, altura, dimensoes)
 
@@ -174,30 +277,16 @@ while True:
                         for outro in algo:
                             vetor = [i[0], i[1]]
                             if vetor == outro.rect:
-                                if outro.cond == 1:
-                                    outro.cond = 0
-                                elif outro.cond == 0:
+                                if outro.cond == 0:
                                     outro.cond = 1
-
-
+                                    qtd_reveladas += 1
+                                    um_valorai = outro.rect
 
     #Informações da localização do mouse
     coordrato = pygame.mouse.get_pos()
     rato = pygame.draw.rect(tela, (0, 0, 0), (coordrato[0], coordrato[1], 1, 1))
 
-    #IMPRIMIR AS MINAS DETECTADAS NAS CÉLULAS REVELADAS
-    for numero in matriz:
-        for elemento in numero:
-            informação_mina_detectada = f'{elemento.rast}'
-            texto_mina_detectada = fonte.render(informação_mina_detectada, True, azul)
-            informação_bomba = f'{elemento.bomb}'
-            texto_bomba = fonte.render(informação_bomba, True, verde)
-            if elemento.cond == 1:
-                printarNumero(matriz, tela, newLarg, newAlt, texto_bomba, elemento.rect, dimensoes)
-                printarNumero(matriz, tela, newLarg, newAlt, texto_mina_detectada, elemento.rect, dimensoes)
-                qtd_reveladas += 1
-
-    #Condição para que a primeira casa revelada não contenha bomba
+    # Condição para que a primeira casa revelada não contenha bomba
     if qtd_reveladas == 1:
         print('first play')
         # Preenchendo a matriz com as bombas
@@ -207,8 +296,35 @@ while True:
             if matriz[x_random][y_random].bomb == 0 and matriz[x_random][y_random].cond != 1:
                 matriz[x_random][y_random].bomb = 1
                 qtd_bombas = qtd_bombas - 1
-        rastreamento(matriz, newLarg, newAlt, largura, altura, 0, 100)
-        print('ok')
-        first_play = False
+        rastreamento(matriz)
+        revelarAdjacentes(um_valorai, matriz)
+        print('passou essa linha')
+
+
+    #IMPRIMIR AS MINAS DETECTADAS NAS CÉLULAS REVELADAS
+    for linha in matriz:
+        for elemento in linha:
+            informação_mina_detectada = f'{elemento.rast}'
+            texto_mina_detectada = fonte.render(informação_mina_detectada, True, azul)
+            informação_bomba = f'{elemento.bomb}'
+            texto_bomba = fonte.render(informação_bomba, True, verde)
+            if elemento.cond == 0:
+                printarNumero(matriz, tela, newLarg, newAlt, texto_bomba, elemento.rect, dimensoes)
+                printarNumero(matriz, tela, newLarg, newAlt, texto_mina_detectada, elemento.rect, dimensoes)
+            if elemento.bomb == 1 and elemento.cond == 1: #Verificando se Perdeu
+                gameloop = False
+                print('Voce perdeu')
+            if qtd_reveladas + bombas_restante == dimensoes*dimensoes:
+                gameloop = False
+                print('Voce ganhou')
+
+    if qtd_reveladas > 1:
+        revelarAdjacentes(um_valorai, matriz)
+
+
 
     pygame.display.update()
+
+
+pygame.quit()
+exit()
