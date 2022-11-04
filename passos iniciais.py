@@ -33,6 +33,10 @@ def printarBlock(screen, coords, larg, alt, type):
         pygame.draw.rect(screen, branco, (coords[0], coords[1], larg, alt))
         pygame.draw.rect(screen, cinzaEscuro, (coords[0] + 4, coords[1] + 4, larg - 3, alt - 3))
         pygame.draw.rect(screen, vermelho, (coords[0] + 4, coords[1] + 4, larg - 6, alt - 6))
+    elif type == 2:
+        pygame.draw.rect(screen, branco, (coords[0], coords[1], larg, alt))
+        pygame.draw.rect(screen, cinzaEscuro, (coords[0] + 4, coords[1] + 4, larg - 3, alt - 3))
+        pygame.draw.rect(screen, azul, (coords[0] + 4, coords[1] + 4, larg - 6, alt - 6))
 
 def gerarTabuleiro(matriz, larg, alt, num):
     x_inicial = 0
@@ -161,8 +165,10 @@ while gameloop:
     dimensoes = 16  # Dimensão que pode ser alterada
     if dimensoes == 8:
         qtd_bombas = dimensoes + 1
+        bandeiras = qtd_bombas
     elif dimensoes == 16:
         qtd_bombas = 25
+        bandeiras = qtd_bombas
     bombas_restante = qtd_bombas
     # Organizando fonte
     tamanho_fonte = 0
@@ -205,18 +211,35 @@ while gameloop:
                 pygame.quit()
                 exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                print(coordrato)
-                for i in objetos:
-                    if i.colliderect(rato):
-                        for algo in matriz:
-                            for outro in algo:
-                                vetor = [i[0], i[1]]
-                                if vetor == outro.rect:
-                                    if outro.cond == 0:
-                                        outro.cond = 1
-                                        um_valorai = outro.rect
-                                        if qtd_reveladas >= 1 and outro.bomb == 0:
-                                            revelarAdjacentes(um_valorai, matriz)
+                #REVELAR A CÉLULA
+                if pygame.mouse.get_pressed() == (1,0,0):
+                    print(coordrato)
+                    for i in objetos:
+                        if i.colliderect(rato):
+                            for linha in matriz:
+                                for elemento in linha:
+                                    vetor = [i[0], i[1]]
+                                    if vetor == elemento.rect:
+                                        if elemento.cond == 0:
+                                            elemento.cond = 1
+                                            um_valorai = elemento.rect
+                                            if qtd_reveladas >= 1 and elemento.bomb == 0:
+                                                revelarAdjacentes(um_valorai, matriz)
+                #MARCAR A CÉLULA COM A BANDEIRA
+                if pygame.mouse.get_pressed() == (0,0,1):
+                    print(coordrato)
+                    for i in objetos:
+                        if i.colliderect(rato):
+                            for linha in matriz:
+                                for elemento in linha:
+                                    vetor = [i[0], i[1]]
+                                    if vetor == elemento.rect:
+                                        if elemento.cond == 0:
+                                            elemento.cond = 2
+                                            bandeiras -= 1
+                                        elif elemento.cond == 2:
+                                            elemento.cond = 0
+                                            bandeiras += 1
 
         # Condição para que a primeira casa revelada não contenha bomba
         if first_play == True and qtd_reveladas == 1:
@@ -255,7 +278,6 @@ while gameloop:
         if qtd_reveladas + bombas_restante == dimensoes * dimensoes: #Verificando se ganhou
             vitoria = 1
             jogando = False
-
         pygame.display.update()
 
     if vitoria == 1:
@@ -283,6 +305,5 @@ while gameloop:
         jogando = True
     elif pergunta == 0:
         gameloop = False
-
 pygame.quit()
 exit()
