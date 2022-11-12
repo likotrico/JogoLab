@@ -178,6 +178,7 @@ while gameloop:
         tamanho_fonte = 20
 
     fonte = pygame.font.SysFont('arial', tamanho_fonte, False, False)
+    fonte2 = pygame.font.SysFont('arial', 40, True, True)
 
     newLarg = int((largura) / dimensoes)  # Largura das Células
     newAlt = int((altura - 100) / dimensoes)  # Altura das Células
@@ -278,32 +279,97 @@ while gameloop:
         if qtd_reveladas + bombas_restante == dimensoes * dimensoes: #Verificando se ganhou
             vitoria = 1
             jogando = False
+
         pygame.display.update()
 
-    if vitoria == 1:
-        print('voce ganhou')
-    elif vitoria == 0:
+    decisao = True
+    while decisao:
         printMatriz(matriz, tela, largura, altura, dimensoes)
-        for linha in matriz:
-            for elemento in linha:
-                informação_mina_detectada = f'{elemento.rast}'
-                texto_mina_detectada = fonte.render(informação_mina_detectada, True, azul)
-                informação_bomba = f'{elemento.bomb}'
-                texto_bomba = fonte.render(informação_bomba, True, verde)
-                if elemento.bomb == 1:
-                    printarNumero(matriz, tela, newLarg, newAlt, texto_bomba, elemento.rect, dimensoes)
-                elif elemento.bomb == 0 and elemento.cond == 1 and elemento.rast != 0:
-                    printarNumero(matriz, tela, newLarg, newAlt, texto_mina_detectada, elemento.rect, dimensoes)
-        pygame.display.update()
-        print('voce perdeu')
+
+        if vitoria == 1:
+        #Revelando a última célula revelada (Evitar Bug visual)
+            for linha in matriz:
+                for elemento in linha:
+                    informação_mina_detectada = f'{elemento.rast}'
+                    texto_mina_detectada = fonte.render(informação_mina_detectada, True, azul)
+                    if elemento.cond == 1:
+                        if elemento.rast != 0:
+                            printarNumero(matriz, tela, newLarg, newAlt, texto_mina_detectada, elemento.rect, dimensoes)
+            #Texto de vitória
+            msg_vitoria = 'Parabéns, você ganhou!'
+            texto_vitoria = fonte2.render(msg_vitoria, True, branco)
+            #Desenhando os retângulos de arte
+            pygame.draw.rect(tela, branco, (125, 225, 390, 60))
+            pygame.draw.rect(tela, preto, (130, 230, 380, 50))
+            #Imprimindo na tela o texto pós-game
+            tela.blit(texto_vitoria, (130, 230))
+
+        elif vitoria == 0:
+            #Mostrando onde estavam as outras bombas para o jogador
+            for linha in matriz:
+                for elemento in linha:
+                    informação_mina_detectada = f'{elemento.rast}'
+                    texto_mina_detectada = fonte.render(informação_mina_detectada, True, azul)
+                    informação_bomba = f'{elemento.bomb}'
+                    texto_bomba = fonte.render(informação_bomba, True, verde)
+                    if elemento.bomb == 1:
+                        printarNumero(matriz, tela, newLarg, newAlt, texto_bomba, elemento.rect, dimensoes)
+                    elif elemento.bomb == 0 and elemento.cond == 1 and elemento.rast != 0:
+                        printarNumero(matriz, tela, newLarg, newAlt, texto_mina_detectada, elemento.rect, dimensoes)
+
+            #Texto de derrota
+            msg_derrota = 'Você perdeu!'
+            texto_derrota = fonte2.render(msg_derrota, True, branco)
+            #Retângulos para arte
+            pygame.draw.rect(tela, branco, (125, 225, 390, 60))
+            pygame.draw.rect(tela, preto, (130, 230, 380, 50))
+            #Imprimindo na tela o texto pós-game
+            tela.blit(texto_derrota, (215, 230))
+
+        #Textos continuar e sair
+        msg_continuar = 'Jogar novamente'
+        msg_sair = 'Sair'
+        texto_continuar = fonte2.render(msg_continuar, True, branco)
+        texto_sair = fonte2.render(msg_sair, True, branco)
+
+        #Retângulos para colisão continuar e sair
+        rect_cont = pygame.draw.rect(tela, branco, (180, 295, 280, 60))
+        pygame.draw.rect(tela, preto, (185, 300, 270, 50))
+
+        rect_sair = pygame.draw.rect(tela, branco, (180, 365, 280, 60))
+        pygame.draw.rect(tela, preto, (185, 370, 270, 50))
+
+        tela.blit(texto_continuar, (185, 300))
+        tela.blit(texto_sair, (280, 370))
+
+        coordrato = pygame.mouse.get_pos()
+        rato = pygame.draw.rect(tela, (0, 0, 0), (coordrato[0], coordrato[1], 1, 1))
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+            if rato.colliderect(rect_cont):
+                texto_continuar = fonte2.render(msg_continuar, True, verde)
+                tela.blit(texto_continuar, (185, 300))
+            else:
+                texto_continuar = fonte2.render(msg_continuar, True, branco)
+                tela.blit(texto_continuar, (185, 300))
+            if rato.colliderect(rect_sair):
+                texto_sair = fonte2.render(msg_sair, True, verde)
+                tela.blit(texto_sair, (280, 370))
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pressed() == (1, 0, 0):
+                    if rect_cont.colliderect(rato):
+                        jogando = True
+                        decisao = False
+                    elif rect_sair.colliderect(rato):
+                        gameloop = False
+                        decisao = False
+
+            pygame.display.update()
 
     matriz.clear()
     objetos.clear()
 
-    pergunta = int(input('Deseja continuar jogando?\n1 - Sim\n0 - Não\n'))
-    if pergunta == 1:
-        jogando = True
-    elif pergunta == 0:
-        gameloop = False
 pygame.quit()
 exit()
