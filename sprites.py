@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from math import floor
-from time import sleep
 
 pygame.init()
 
@@ -47,7 +46,7 @@ class Bomberman(pygame.sprite.Sprite):
                 self.x += 3.75
                 self.rect.midleft = self.x, self.y
         else:
-            sleep(0.5)
+
             self.sprites.clear()
 
 
