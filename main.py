@@ -1,145 +1,8 @@
-import pygame
 from random import randint
-from mecanica_celulas import obj
 from pygame.locals import *
 from sys import exit
+from funcoesJogo import *
 
-def gerarMatriz(num):
-    matriz = []
-    aux = []
-    for i in range(0, num):
-        for j in range(0, num):
-            objaux = obj([i, j], 0, 0, 0)
-            aux.append(objaux)
-        matriz.append(aux)
-        aux = []
-    return matriz
-
-def printMatriz(matriz, screen, larg, alt, num):
-    Lista = matriz
-    y_inicial = 100
-    newLarg = (larg) / num
-    newAlt = (alt - y_inicial) / num
-    for lista in Lista:
-        for cell in lista:
-            printarBlock(screen, cell.rect, newLarg, newAlt, cell.cond)
-
-def printarBlock(screen, coords, larg, alt, type):
-    if type == 0:
-        pygame.draw.rect(screen, branco, (coords[0], coords[1], larg, alt))
-        pygame.draw.rect(screen, cinzaEscuro, (coords[0] + 4, coords[1] + 4, larg - 3, alt - 3))
-        pygame.draw.rect(screen, cinza, (coords[0] + 4, coords[1] + 4, larg - 6, alt - 6))
-    elif type == 1:
-        pygame.draw.rect(screen, branco, (coords[0], coords[1], larg, alt))
-        pygame.draw.rect(screen, cinzaEscuro, (coords[0] + 4, coords[1] + 4, larg - 3, alt - 3))
-        pygame.draw.rect(screen, vermelho, (coords[0] + 4, coords[1] + 4, larg - 6, alt - 6))
-    elif type == 2:
-        pygame.draw.rect(screen, branco, (coords[0], coords[1], larg, alt))
-        pygame.draw.rect(screen, cinzaEscuro, (coords[0] + 4, coords[1] + 4, larg - 3, alt - 3))
-        pygame.draw.rect(screen, azul, (coords[0] + 4, coords[1] + 4, larg - 6, alt - 6))
-
-def gerarTabuleiro(matriz, larg, alt, num):
-    x_inicial = 0
-    y_inicial = 100
-    newLarg = (larg) / num
-    newAlt = (alt - y_inicial) / num
-    for i in range(0, num):
-        for j in range(0, num):
-            matriz[i][j].rect = [x_inicial + newLarg * j, y_inicial + newAlt * i]
-
-def Tabuleiro(screen, larg, alt, num):
-    matriz = gerarMatriz(num)
-    x_inicial = 0
-    y_inicial = 100
-    newLarg = (larg)/num
-    newAlt = (alt-y_inicial)/num
-    for i in range(0, num):
-         for j in range(0, num):
-            matriz[i][j].rect = [x_inicial + newLarg * j, y_inicial + newAlt * i]
-
-    matriz[0][0].cond = 1
-    for lista in matriz:
-        for cell in lista:
-            printarBlock(screen, cell.rect, newLarg, newAlt, cell.cond)
-
-def printarNumero(matriz, screen, newlarg, newalt, texto, coords, dimensoes):
-    if dimensoes == 8:
-        for i in matriz:
-            for j in i:
-                if j.rect == coords:
-                    screen.blit(texto, (((j.rect[0])+(newlarg)/2)-7, ((j.rect[1])+(newalt)/4)-7))
-    if dimensoes == 16:
-        for i in matriz:
-            for j in i:
-                if j.rect == coords:
-                    screen.blit(texto, (((j.rect[0]) + (newlarg) / 2) - 3, ((j.rect[1]) + (newalt) / 4) - 3))
-
-def rastreamento(matriz):
-    print('entrou rast')
-    print(len(matriz)-1)
-    for i in range(0, len(matriz)):
-        for j in range(0, len(matriz)):
-            count = 0
-            if i - 1 >= 0 and j - 1 >=0:
-                if matriz[i-1][j-1].bomb == 1:
-                    count += 1
-            if j - 1 >= 0:
-                if matriz[i][j-1].bomb == 1:
-                    count += 1
-            if i + 1 <= len(matriz) - 1 and j - 1 >= 0:
-                if matriz[i+1][j-1].bomb == 1:
-                    count += 1
-            if i - 1 >= 0:
-                if matriz[i - 1][j].bomb == 1:
-                    count += 1
-            if i + 1 <= len(matriz)-1:
-                if matriz[i+1][j].bomb == 1:
-                    count += 1
-            if i - 1 >= 0 and j + 1 <= len(matriz)-1:
-                if matriz[i-1][j+1].bomb == 1:
-                    count += 1
-            if j+1<=len(matriz)-1:
-                if matriz[i][j+1].bomb == 1:
-                    count += 1
-            if i+1<=len(matriz)-1 and j+1<=len(matriz)-1:
-                if matriz[i+1][j+1].bomb == 1:
-                    count += 1
-            print(count)
-            matriz[i][j].rast = count
-
-def revelarAdjacentes(coords, matriz):
-    verificacoes = []
-    verificacoes.append(coords)
-    verificados = []
-    while len(verificacoes) != 0:
-        x_coord = verificacoes[0][0]
-        y_coord = verificacoes[0][1]
-        print('verificacoes:')
-        print(verificacoes)
-        print('verificados')
-        print(verificados)
-        for X in range(0, len(matriz)):
-            for Y in range(0, len(matriz)):
-                if matriz[X][Y].rect == [x_coord, y_coord] and matriz[X][Y].rast == 0 and (matriz[X][Y].rect in verificados) == False:
-                    if Y - 1 >= 0:
-                        if matriz[X][Y - 1].bomb == 0 and (matriz[X][Y - 1].rect in verificados) == False:
-                            matriz[X][Y - 1].cond = 1
-                            verificacoes.append(matriz[X][Y - 1].rect)
-                    if X - 1 >= 0:
-                        if matriz[X - 1][Y].bomb == 0 and (matriz[X - 1][Y].rect in verificados) == False:
-                            matriz[X - 1][Y].cond = 1
-                            verificacoes.append(matriz[X - 1][Y].rect)
-                    if X + 1 <= len(matriz) - 1:
-                        if matriz[X + 1][Y].bomb == 0 and (matriz[X + 1][Y].rect in verificados) == False:
-                            matriz[X + 1][Y].cond = 1
-                            verificacoes.append(matriz[X + 1][Y].rect)
-                    if Y + 1 <= len(matriz) - 1:
-                        if matriz[X][Y + 1].bomb == 0 and (matriz[X][Y + 1].rect in verificados) == False:
-                            matriz[X][Y + 1].cond = 1
-                            verificacoes.append(matriz[X][Y + 1].rect)
-        if len(verificacoes) > 0:
-            verificados.append([x_coord, y_coord])
-            verificacoes.remove([x_coord,y_coord])
 
 pygame.init()
 
@@ -170,6 +33,7 @@ while gameloop:
         qtd_bombas = 25
         bandeiras = qtd_bombas
     bombas_restante = qtd_bombas
+
     # Organizando fonte
     tamanho_fonte = 0
     if dimensoes == 8:
@@ -179,6 +43,7 @@ while gameloop:
 
     fonte = pygame.font.SysFont('arial', tamanho_fonte, False, False)
     fonte2 = pygame.font.SysFont('arial', 40, True, True)
+    fonte3 = pygame.font.SysFont('arial', 50, False, False)
 
     newLarg = int((largura) / dimensoes)  # Largura das Células
     newAlt = int((altura - 100) / dimensoes)  # Altura das Células
@@ -200,8 +65,11 @@ while gameloop:
     um_valorai = []
     first_play = True
 
+    relogio = iniciarContagem()
+
     while jogando:
         # Informações da localização do mouse
+        tela.fill(preto)
         coordrato = pygame.mouse.get_pos()
         rato = pygame.draw.rect(tela, (0, 0, 0), (coordrato[0], coordrato[1], 1, 1))
 
@@ -235,12 +103,22 @@ while gameloop:
                                 for elemento in linha:
                                     vetor = [i[0], i[1]]
                                     if vetor == elemento.rect:
-                                        if elemento.cond == 0:
+                                        if elemento.cond == 0 and bandeiras > 0:
                                             elemento.cond = 2
                                             bandeiras -= 1
                                         elif elemento.cond == 2:
                                             elemento.cond = 0
                                             bandeiras += 1
+
+        # Informações bandeiras
+        msg_bandeiras = f'Bandeiras: {bandeiras}'
+        texto_bandeiras = fonte3.render(msg_bandeiras, True, verde)
+        tela.blit(texto_bandeiras, (10, 15))
+
+        # Informações relogio
+        msg_relogio = f'Tempo: %.f'%(atualizarContagem(relogio))
+        texto_relogio = fonte3.render(msg_relogio, True, verde)
+        tela.blit(texto_relogio, (380, 15))
 
         # Condição para que a primeira casa revelada não contenha bomba
         if first_play == True and qtd_reveladas == 1:
@@ -342,6 +220,7 @@ while gameloop:
         tela.blit(texto_continuar, (185, 300))
         tela.blit(texto_sair, (280, 370))
 
+        #Evento para continuar jogando ou sair
         coordrato = pygame.mouse.get_pos()
         rato = pygame.draw.rect(tela, (0, 0, 0), (coordrato[0], coordrato[1], 1, 1))
         for event in pygame.event.get():
