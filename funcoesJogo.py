@@ -144,6 +144,22 @@ def revelarAdjacentes(coords, matriz):
                         if matriz[X][Y + 1].bomb == 0 and (matriz[X][Y + 1].rect in verificados) == False:
                             matriz[X][Y + 1].cond = 1
                             verificacoes.append(matriz[X][Y + 1].rect)
+                    if X - 1 >= 0 and Y - 1 >= 0:
+                        if matriz[X-1][Y-1].bomb == 0 and (matriz[X-1][Y-1].rect in verificados) == False:
+                            matriz[X-1][Y-1].cond = 1
+                            verificacoes.append(matriz[X-1][Y-1].rect)
+                    if X + 1 <= len(matriz) - 1 and Y - 1 >= 0:
+                        if matriz[X+1][Y-1].bomb == 0 and (matriz[X+1][Y-1].rect in verificados) == False:
+                            matriz[X + 1][Y - 1].cond = 1
+                            verificacoes.append(matriz[X+1][Y-1].rect)
+                    if X - 1 >= 0 and Y + 1 <= len(matriz) - 1:
+                        if matriz[X-1][Y+1].bomb == 0 and (matriz[X-1][Y+1].rect in verificados) == False:
+                            matriz[X - 1][Y + 1].cond = 1
+                            verificacoes.append(matriz[X-1][Y+1].rect)
+                    if X + 1 <= len(matriz) - 1 and Y + 1 <= len(matriz) - 1:
+                        if matriz[X+1][Y+1].bomb == 0 and (matriz[X+1][Y+1].rect in verificados) == False:
+                            matriz[X + 1][Y + 1].cond = 1
+                            verificacoes.append(matriz[X+1][Y+1].rect)
         if len(verificacoes) > 0:
             verificados.append([x_coord, y_coord])
             verificacoes.remove([x_coord,y_coord])

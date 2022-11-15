@@ -26,6 +26,7 @@ pygame.display.set_caption('Campo Minado') # Nome da Janela do jogo
 rodarAnimacaoInicial(tela) #Rodar a animação
 
 menu = -1 #Variável que ficará responsável pelo loop do menu
+
 while menu != 0:
     menu = rodarMenu(tela)  # Mostrar o display do Menu
     dimensoes = menu #Escolher as dimensões de acordo com a dificiltado escolhida.
@@ -34,6 +35,10 @@ while menu != 0:
         gameloop = True #Variável para saber se vai voltar a jogar ou não quando a partida termina
         jogando = True #Variável para estar jogando
         decisao = True
+    else:
+        gameloop = False
+        jogando = False
+        decisao = False
     while gameloop:
         # Dimensão que pode ser alterada
         if dimensoes == 8:
