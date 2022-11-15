@@ -6,12 +6,12 @@ from time import sleep
 
 pygame.init()
 
-largura = 640
-altura = 580
-AZUL = (65, 105, 225)
+#largura = 640
+#altura = 580
 
-tela = pygame.display.set_mode((largura, altura))
-pygame.display.set_caption('Sprites')
+
+#tela = pygame.display.set_mode((largura, altura))
+#pygame.display.set_caption('Sprites')
 
 
 class Bomberman(pygame.sprite.Sprite):
@@ -38,7 +38,7 @@ class Bomberman(pygame.sprite.Sprite):
 
 
 
-    def update(self):
+    def update(self, tela):
         self.atual += 0.15
         if self.atual <= len(self.sprites):
             self.image = self.sprites[floor(self.atual)]
@@ -48,25 +48,35 @@ class Bomberman(pygame.sprite.Sprite):
                 self.rect.midleft = self.x, self.y
         else:
             sleep(0.5)
-            tela.blit(img, (0, 0))
             self.sprites.clear()
 
 
-todas_as_sprites = pygame.sprite.Group()
-bomberman = Bomberman()
-todas_as_sprites.add(bomberman)
-img = pygame.image.load('Sprites/CampoMinado.png')
 
-relogio = pygame.time.Clock()
 
-while True:
-    relogio.tick(30)
-    tela.fill(AZUL)
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            exit()
-    todas_as_sprites.draw(tela)
-    todas_as_sprites.update()
-    pygame.display.flip()
+
+def rodarAnimacaoInicial(screen):
+    tela = screen
+
+    AZUL = (65, 105, 225)
+    todas_as_sprites = pygame.sprite.Group()
+    bomberman = Bomberman()
+    todas_as_sprites.add(bomberman)
+    img = pygame.image.load('Sprites/CampoMinado.png')
+
+
+    relogio = pygame.time.Clock()
+    animacao = True
+    while animacao:
+        relogio.tick(30)
+        tela.fill(AZUL)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pressed() == (1, 0, 0):
+                    animacao = False
+        todas_as_sprites.draw(tela)
+        todas_as_sprites.update(tela)
+        pygame.display.flip()
 
