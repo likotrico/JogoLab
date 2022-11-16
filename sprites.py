@@ -11,7 +11,7 @@ fonte = pygame.font.SysFont('arial', 17, True, True)
 
 #tela = pygame.display.set_mode((largura, altura))
 #pygame.display.set_caption('Sprites')
-texto_anim = fonte.render('Aperte com o botão esquerdo do mouse para começar', True, (0, 0, 0))
+texto_anim = fonte.render('Aperte o botão esquerdo do mouse para começar', True, (0, 0, 0))
 
 class Bomberman(pygame.sprite.Sprite):
     def __init__(self):
