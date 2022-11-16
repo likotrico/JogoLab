@@ -7,11 +7,11 @@ pygame.init()
 
 #largura = 640
 #altura = 580
-
+fonte = pygame.font.SysFont('arial', 17, True, True)
 
 #tela = pygame.display.set_mode((largura, altura))
 #pygame.display.set_caption('Sprites')
-
+texto_anim = fonte.render('Aperte com o botão esquerdo do mouse para começar', True, (0, 0, 0))
 
 class Bomberman(pygame.sprite.Sprite):
     def __init__(self):
@@ -68,6 +68,7 @@ def rodarAnimacaoInicial(screen):
     while animacao:
         relogio.tick(30)
         tela.fill(AZUL)
+        tela.blit(texto_anim, (110, 350))
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
