@@ -54,20 +54,6 @@ def gerarTabuleiro(matriz, larg, alt, num):
         for j in range(0, num):
             matriz[i][j].rect = [x_inicial + newLarg * j, y_inicial + newAlt * i]
 
-def Tabuleiro(screen, larg, alt, num):
-    matriz = gerarMatriz(num)
-    x_inicial = 0
-    y_inicial = 100
-    newLarg = (larg)/num
-    newAlt = (alt-y_inicial)/num
-    for i in range(0, num):
-         for j in range(0, num):
-            matriz[i][j].rect = [x_inicial + newLarg * j, y_inicial + newAlt * i]
-
-    matriz[0][0].cond = 1
-    for lista in matriz:
-        for cell in lista:
-            printarBlock(screen, cell.rect, newLarg, newAlt, cell.cond)
 
 def printarNumero(matriz, screen, newlarg, newalt, texto, coords, dimensoes):
     if dimensoes == 8:

@@ -24,6 +24,7 @@ def rodarMenu(screen):
 
     BG1 = pygame.image.load('Menu screen/background1.png')
     BG2 = pygame.image.load('Menu screen/background2.png')
+    BG3 = pygame.image.load('Menu screen/background3.png')
 
     while menu:
         msg_jogar = 'JOGAR'
@@ -130,53 +131,15 @@ def rodarMenu(screen):
                         instrucoes = True
                         while instrucoes:
                             msg_voltar = 'VOLTAR'
-                            msg_ajuda1 = 'BOTÃO DIREITO DO MOUSE: marca a célula com uma bandeira (célula de cor azul) ou '
-                            msg_ajuda11 = 'remove a marcação caso esteja marcada.'
-                            msg_ajuda2 = 'COMO JOGAR: O objetivo do jogo é revelar todas as células que não possuem bombas'
-                            msg_ajuda21 = 'no menor tempo possível. Ao revelar uma célula, ela possuirá um número indicando'
-                            msg_ajuda22 = 'a quantidade de bombas nas células adjacentes. Se a célula revelada não possuir'
-                            msg_ajuda23 = 'bombas ao redor, as células adjacentes serão reveladas automaticamente. Revelar'
-                            msg_ajuda24 = 'uma célula com bomba resulta na derrota. A quantidade de bombas presente no campo'
-                            msg_ajuda25 = 'é numericamente igual a quantidade de bandeiras disponíveis no inicio do jogo. A quan-'
-                            msg_ajuda26 = 'tidade de bandeiras disponíveis no inicio do jogo. A bandeira serve para marcar uma cé-'
-                            msg_ajuda27 = 'lula que o jogador acredita haver uma bomba. Uma célula marcada não pode ser revela-'
-                            msg_ajuda28 = 'da. Ao marcar uma célula, uma bandeira é consumida. Caso seja desmarcada, a bandei-'
-                            msg_ajuda29 = 'ra é recuperada.'
-                            msg_ajuda3 = 'BOTÃO ESQUERDO DO MOUSE: revela a célula selecionada.'
+
 
                             texto_voltar = fonte2.render(msg_voltar, True, preto)
-                            texto_ajuda1 = fonte1.render(msg_ajuda1, True, branco)
-                            texto_ajuda11 = fonte1.render(msg_ajuda11, True, branco)
-                            texto_ajuda2 = fonte1.render(msg_ajuda2, True, branco)
-                            texto_ajuda21 = fonte1.render(msg_ajuda21, True, branco)
-                            texto_ajuda22 = fonte1.render(msg_ajuda22, True, branco)
-                            texto_ajuda23 = fonte1.render(msg_ajuda23, True, branco)
-                            texto_ajuda24 = fonte1.render(msg_ajuda24, True, branco)
-                            texto_ajuda25 = fonte1.render(msg_ajuda25, True, branco)
-                            texto_ajuda26 = fonte1.render(msg_ajuda26, True, branco)
-                            texto_ajuda27 = fonte1.render(msg_ajuda27, True, branco)
-                            texto_ajuda28 = fonte1.render(msg_ajuda28, True, branco)
-                            texto_ajuda29 = fonte1.render(msg_ajuda29, True, branco)
-                            texto_ajuda3 = fonte1.render(msg_ajuda3, True, branco)
 
                             rect_voltar = pygame.draw.rect(tela, preto, (245, 510, 160, 60))
                             pygame.draw.rect(tela, preto, (250, 515, 150, 50))
 
-                            tela.blit(BG2, (0, 0))
+                            tela.blit(BG3, (0, 0))
                             tela.blit(texto_voltar, (250, 515))
-                            tela.blit(texto_ajuda1, (20, 20))
-                            tela.blit(texto_ajuda11, (20, 40))
-                            tela.blit(texto_ajuda2, (20, 80))
-                            tela.blit(texto_ajuda21, (20, 100))
-                            tela.blit(texto_ajuda22, (20, 120))
-                            tela.blit(texto_ajuda23, (20, 140))
-                            tela.blit(texto_ajuda24, (20, 160))
-                            tela.blit(texto_ajuda25, (20, 180))
-                            tela.blit(texto_ajuda26, (20, 200))
-                            tela.blit(texto_ajuda27, (20, 220))
-                            tela.blit(texto_ajuda28, (20, 240))
-                            tela.blit(texto_ajuda29, (20, 260))
-                            tela.blit(texto_ajuda3, (20, 300))
 
                             coordrato = pygame.mouse.get_pos()
                             rato = pygame.draw.rect(tela, (0, 0, 0), (coordrato[0], coordrato[1], 1, 1))
