@@ -150,8 +150,27 @@ def revelarAdjacentes(coords, matriz):
             verificados.append([x_coord, y_coord])
             verificacoes.remove([x_coord,y_coord])
 
+
+
 def iniciarContagem():
     return time.time()
 
 def atualizarContagem(tempo):
     return ((time.time())- tempo)
+
+def tamanhoFonte(dimensoes):
+    if dimensoes == 8:
+        return 40
+    else:
+        return 20
+
+
+def gerarObjetos(matriz, tela, newLarg, newAlt):
+    objetos = []
+    for i in matriz:
+        for j in i:
+            xy = j.rect
+            obj_aux = pygame.draw.rect(tela, (0, 0, 0), (xy[0], xy[1], newLarg, newAlt))
+            objetos.append(obj_aux)
+        obj_aux = []
+    return objetos

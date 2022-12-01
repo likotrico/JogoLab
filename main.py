@@ -4,28 +4,21 @@ from sys import exit
 from funcoesJogo import *
 from Menu_Principal import *
 from sprites import *
+from jogar import *
 
 pygame.init()
 
 largura = 640 # Largura da Tela
 altura = 580 # Altura da Tela
 
-#Cores
-azul = (0, 0, 255)
-branco = (255, 255, 255)
-cinza = (153, 153, 153)
-cinzaEscuro = (102, 102, 102)
-preto = (0, 0, 0)
-vermelho = (255, 0, 0)
-verde = (0, 255, 0)
-
 #Formando a tela
 tela = pygame.display.set_mode((largura, altura))
 pygame.display.set_caption('Campo Minado') # Nome da Janela do jogo
 
 rodarAnimacaoInicial(tela) #Rodar a animação
-
-menu = -1 #Variável que ficará responsável pelo loop do menu
+jogar(tela, largura, altura)
+#############AQUI
+"""menu = -1 #Variável que ficará responsável pelo loop do menu
 
 while menu != 0:
     menu = rodarMenu(tela)  # Mostrar o display do Menu
@@ -50,11 +43,11 @@ while menu != 0:
         bombas_restante = qtd_bombas
 
         # Organizando fonte
-        tamanho_fonte = 0
-        if dimensoes == 8:
+        tamanho_fonte = tamanhoFonte(dimensoes)
+        """"""if dimensoes == 8:
             tamanho_fonte = 40
         else:
-            tamanho_fonte = 20
+            tamanho_fonte = 20""""""
 
         fonte = pygame.font.SysFont('arial', tamanho_fonte, False, False)
         fonte2 = pygame.font.SysFont('arial', 40, True, True)
@@ -68,12 +61,15 @@ while menu != 0:
         objetos = []  # Lista dos objetos que serão utilizados para colisões
 
         # For que gera os objetos para colisão e os coloca na lista de objetos
-        for i in matriz:
+        """"""for i in matriz:
             for j in i:
                 xy = j.rect
                 obj_aux = pygame.draw.rect(tela, (0, 0, 0), (xy[0], xy[1], newLarg, newAlt))
                 objetos.append(obj_aux)
-            obj_aux = []
+            obj_aux = []""""""
+
+
+        objetos = gerarObjetos(matriz, tela, newLarg, newAlt)
 
         qtd_reveladas = 0
         vitoria = -1
@@ -263,7 +259,7 @@ while menu != 0:
                 pygame.display.update()
 
         matriz.clear()
-        objetos.clear()
+        objetos.clear()"""
 
-    #pygame.quit()
-    #exit()
+pygame.quit()
+exit()
