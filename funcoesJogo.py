@@ -12,15 +12,16 @@ verde = (0, 255, 0)
 
 
 def gerarMatriz(num):
-    matriz = []
-    aux = []
-    for i in range(0, num):
-        for j in range(0, num):
-            objaux = obj([i, j], 0, 0, 0)
-            aux.append(objaux)
-        matriz.append(aux)
+    if num >= 0 and type(num) == int:
+        matriz = []
         aux = []
-    return matriz
+        for i in range(0, num):
+            for j in range(0, num):
+                objaux = obj([i, j], 0, 0, 0)
+                aux.append(objaux)
+            matriz.append(aux)
+            aux = []
+        return matriz
 
 def printMatriz(matriz, screen, larg, alt, num):
     Lista = matriz
@@ -68,8 +69,8 @@ def printarNumero(matriz, screen, newlarg, newalt, texto, coords, dimensoes):
                     screen.blit(texto, (((j.rect[0]) + (newlarg) / 2) - 3, ((j.rect[1]) + (newalt) / 4) - 3))
 
 def rastreamento(matriz):
-    print('entrou rast')
-    print(len(matriz)-1)
+    #print('entrou rast')
+    #print(len(matriz)-1)
     for i in range(0, len(matriz)):
         for j in range(0, len(matriz)):
             count = 0
@@ -97,7 +98,7 @@ def rastreamento(matriz):
             if i+1<=len(matriz)-1 and j+1<=len(matriz)-1:
                 if matriz[i+1][j+1].bomb == 1:
                     count += 1
-            print(count)
+            #print(count)
             matriz[i][j].rast = count
 
 def revelarAdjacentes(coords, matriz):
@@ -107,10 +108,6 @@ def revelarAdjacentes(coords, matriz):
     while len(verificacoes) != 0:
         x_coord = verificacoes[0][0]
         y_coord = verificacoes[0][1]
-        print('verificacoes:')
-        print(verificacoes)
-        print('verificados')
-        print(verificados)
         for X in range(0, len(matriz)):
             for Y in range(0, len(matriz)):
                 if matriz[X][Y].rect == [x_coord, y_coord] and matriz[X][Y].rast == 0 and (matriz[X][Y].rect in verificados) == False:
@@ -161,7 +158,7 @@ def atualizarContagem(tempo):
 def tamanhoFonte(dimensoes):
     if dimensoes == 8:
         return 40
-    else:
+    elif dimensoes == 16:
         return 20
 
 

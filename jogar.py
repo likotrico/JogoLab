@@ -1,6 +1,4 @@
 from random import randint
-from pygame.locals import *
-from sys import exit
 from funcoesJogo import *
 from Menu_Principal import *
 from sprites import *
@@ -26,11 +24,9 @@ def jogar(screen, largura, altura):
         if dimensoes != 0:
             gameloop = True #Variável para saber se vai voltar a jogar ou não quando a partida termina
             jogando = True #Variável para estar jogando
-            decisao = True
         else:
             gameloop = False
             jogando = False
-            decisao = False
         while gameloop:
             # Dimensão que pode ser alterada
             if dimensoes == 8:
@@ -57,7 +53,7 @@ def jogar(screen, largura, altura):
             matriz = gerarMatriz(dimensoes)  # Matriz que vai armadezar todas as informações de uma dada célula
             gerarTabuleiro(matriz, largura, altura, dimensoes)  # Alterar a matriz com todas as informações necessárias
 
-            objetos = []  # Lista dos objetos que serão utilizados para colisões
+            #objetos = []  # Lista dos objetos que serão utilizados para colisões
 
             # For que gera os objetos para colisão e os coloca na lista de objetos
             """for i in matriz:
@@ -92,7 +88,7 @@ def jogar(screen, largura, altura):
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         #REVELAR A CÉLULA
                         if pygame.mouse.get_pressed() == (1,0,0):
-                            print(coordrato)
+                            #print(coordrato)
                             for i in objetos:
                                 if i.colliderect(rato):
                                     for linha in matriz:
@@ -106,7 +102,7 @@ def jogar(screen, largura, altura):
                                                         revelarAdjacentes(um_valorai, matriz)
                         #MARCAR A CÉLULA COM A BANDEIRA
                         if pygame.mouse.get_pressed() == (0,0,1):
-                            print(coordrato)
+                            #print(coordrato)
                             for i in objetos:
                                 if i.colliderect(rato):
                                     for linha in matriz:
@@ -132,7 +128,7 @@ def jogar(screen, largura, altura):
 
                 # Condição para que a primeira casa revelada não contenha bomba
                 if first_play == True and qtd_reveladas == 1:
-                    print('first play')
+                    #print('first play')
                     # Preenchendo a matriz com as bombas
                     while qtd_bombas != 0:
                         x_random = randint(0, dimensoes - 1)
@@ -142,7 +138,7 @@ def jogar(screen, largura, altura):
                             qtd_bombas = qtd_bombas - 1
                     rastreamento(matriz)
                     revelarAdjacentes(um_valorai, matriz)
-                    print('passou essa linha')
+                    #print('passou essa linha')
                     first_play = False
 
                 #IMPRIMIR AS MINAS DETECTADAS NAS CÉLULAS REVELADAS
